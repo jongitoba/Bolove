@@ -1,0 +1,125 @@
+.wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
+  width: 100%;
+}
+
+.wrap h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.intro {
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .intro {
+    color: #aaa;
+  }
+}
+
+.card {
+  border: 1px solid rgba(127, 127, 127, 0.3);
+  border-radius: 10px;
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.searchWrap {
+  position: relative;
+}
+
+.textInput {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid rgba(127, 127, 127, 0.3);
+  background: transparent;
+  color: inherit;
+  font-size: 0.9rem;
+}
+
+.textInput:focus {
+  outline: 2px solid #171717;
+  outline-offset: -1px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .textInput:focus {
+    outline-color: #ededed;
+  }
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 10;
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem;
+  border: 1px solid rgba(127, 127, 127, 0.3);
+  border-radius: 8px;
+  background: var(--background);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem 0.6rem;
+  border: none;
+  border-radius: 5px;
+  background: none;
+  color: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.option:hover {
+  background: rgba(127, 127, 127, 0.12);
+}
+
+.button {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  background: #171717;
+  color: #fff;
+  font-size: 1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .button {
+    background: #ededed;
+    color: #0a0a0a;
+  }
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

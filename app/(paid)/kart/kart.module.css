@@ -1,0 +1,449 @@
+.app-shell {
+  position: relative;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.map-view-container {
+  position: relative;
+  flex: 1;
+  height: 100%;
+}
+
+.map-view {
+  height: 100%;
+}
+
+.sidebar {
+  position: relative;
+  z-index: 2;
+  width: 280px;
+  flex-shrink: 0;
+  background: #1e1e1e;
+  color: #f0f0f0;
+  border-right: 1px solid #333;
+  transition: width 0.2s ease;
+  overflow: hidden;
+}
+
+.sidebar--collapsed {
+  width: 40px;
+}
+
+.sidebar__toggle {
+  position: absolute;
+  top: 12px;
+  right: 8px;
+  background: none;
+  border: none;
+  color: #f0f0f0;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.sidebar__content {
+  padding: 48px 16px 16px;
+}
+
+.sidebar__content h2 {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sidebar__placeholder {
+  color: #999;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.layer-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.layer-item {
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+
+.layer-item__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.layer-item__label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.layer-item__order {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.layer-item__order button {
+  background: #3a3a3a;
+  border: none;
+  color: #f0f0f0;
+  border-radius: 4px;
+  width: 22px;
+  height: 22px;
+  line-height: 1;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.layer-item__order button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.layer-item__description {
+  margin: 6px 0 0;
+  font-size: 0.75rem;
+  color: #aaa;
+  line-height: 1.35;
+}
+
+.layer-item__granularity {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  font-size: 0.8rem;
+}
+
+.layer-item__granularity-option {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.layer-item__opacity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 0.75rem;
+  color: #ccc;
+}
+
+.layer-item__opacity input[type='range'] {
+  flex: 1;
+}
+
+.detail-panel {
+  z-index: 2;
+  width: 320px;
+  flex-shrink: 0;
+  background: #fafafa;
+  border-left: 1px solid #ddd;
+  /* Extra top clearance, same idea as .sidebar__content's 48px - the tool
+     embed's own fullscreen-toggle button floats at the embed's top-right
+     corner, which is exactly where this panel's own header (and its ✕)
+     would otherwise sit, making the ✕ unclickable (the fullscreen button
+     is on top). */
+  padding: 56px 16px 16px;
+  overflow-y: auto;
+}
+
+.detail-panel h2 {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #333;
+}
+
+.detail-panel__placeholder {
+  color: #888;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.detail-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.detail-panel__clear {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 2px 6px;
+}
+
+.detail-panel__region-name {
+  margin: 4px 0 0;
+  font-size: 1.15rem;
+  color: #111;
+}
+
+.detail-panel__region-meta {
+  margin: 2px 0 14px;
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.detail-panel__metrics {
+  margin: 0 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detail-panel__metric {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 6px;
+}
+
+.detail-panel__metric dt {
+  font-size: 0.78rem;
+  color: #666;
+}
+
+.detail-panel__metric dd {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #111;
+  text-align: right;
+}
+
+.detail-panel__series-title {
+  margin: 0 0 6px;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #666;
+}
+
+.detail-panel__sparkline {
+  width: 100%;
+  height: 48px;
+  display: block;
+}
+
+.detail-panel__sparkline-empty {
+  font-size: 0.78rem;
+  color: #999;
+}
+
+.detail-panel__series-range {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: #888;
+  margin-top: 4px;
+}
+
+.housing-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #3a3a3a;
+}
+
+.housing-stats__field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 0.75rem;
+  color: #ccc;
+}
+
+.housing-stats__field select {
+  background: #1e1e1e;
+  color: #f0f0f0;
+  border: 1px solid #3a3a3a;
+  border-radius: 4px;
+  padding: 4px 6px;
+  font-size: 0.8rem;
+}
+
+.housing-stats__period-pair {
+  display: flex;
+  gap: 8px;
+}
+
+.housing-stats__period-pair .housing-stats__field {
+  flex: 1;
+}
+
+.housing-stats__coverage-note {
+  margin: 0;
+  padding: 6px 8px;
+  background: #2a3a4a;
+  border-left: 3px solid #2a78d6;
+  border-radius: 3px;
+  font-size: 0.72rem;
+  color: #cfe0f0;
+  line-height: 1.35;
+}
+
+.housing-stats__status {
+  margin: 0;
+  font-size: 0.72rem;
+  color: #999;
+}
+
+.housing-stats__status--error {
+  color: #e34948;
+}
+
+.legend {
+  position: absolute;
+  left: 12px;
+  bottom: 28px;
+  z-index: 1;
+  background: rgba(252, 252, 251, 0.95);
+  color: #0b0b0b;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 0.75rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  max-width: 220px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .legend {
+    background: rgba(26, 26, 25, 0.95);
+    color: #ffffff;
+  }
+}
+
+.legend__title {
+  margin: 0 0 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.legend__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.legend__row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend__swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  flex-shrink: 0;
+  border: 1px solid rgba(11, 11, 11, 0.1);
+}
+
+.legend__swatch--no-data {
+  border-style: dashed;
+}
+
+.legend__coverage {
+  margin: 8px 0 0;
+  padding-top: 6px;
+  border-top: 1px solid rgba(11, 11, 11, 0.12);
+  font-size: 0.7rem;
+  color: #52514e;
+}
+
+@media (prefers-color-scheme: dark) {
+  .legend__coverage {
+    border-top-color: rgba(255, 255, 255, 0.12);
+    color: #c3c2b7;
+  }
+}
+
+.map-tooltip {
+  position: absolute;
+  z-index: 3;
+  pointer-events: none;
+  background: rgba(252, 252, 251, 0.97);
+  color: #0b0b0b;
+  border-radius: 4px;
+  padding: 6px 9px;
+  font-size: 0.75rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 220px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .map-tooltip {
+    background: rgba(26, 26, 25, 0.97);
+    color: #ffffff;
+  }
+}
+
+/* Below this width, .sidebar's 280px + .detail-panel's 320px (both normal
+   flex children) add up to more than the viewport itself, squeezing
+   .map-view-container's flex:1 to nothing - the map becomes entirely
+   invisible behind the two panels. Their z-index:2 already signals they
+   were meant to float above the map, not share the row with it - taking
+   them out of flex flow here (each still individually toggleable exactly
+   as before) is what actually makes that happen, so the map is visible
+   and usable regardless of panel state.
+   1024px (not just phone-width) because even where 600px of combined
+   panel width technically still "fits" - e.g. a 768px tablet - it leaves
+   so little of the map that it's not usable, only visible; this is where
+   both panels stop sharing the row with the map at all, and the map gets
+   the full viewport by default regardless. */
+@media (max-width: 1024px) {
+  .sidebar,
+  .detail-panel {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    max-width: min(85vw, 320px);
+    box-shadow: 0 0 16px rgba(0, 0, 0, 0.4);
+  }
+
+  .sidebar {
+    left: 0;
+  }
+
+  .detail-panel {
+    right: 0;
+  }
+
+  /* Nothing selected yet: the placeholder has no reason to cover the map -
+     the map is the primary content on first load. Panel with real content
+     (once a region is picked) still floats in, with its own ✕ to dismiss. */
+  .detail-panel--empty {
+    display: none;
+  }
+}

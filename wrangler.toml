@@ -1,0 +1,20 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "bolove"
+main = ".open-next/worker.js"
+compatibility_date = "2025-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
+
+# Non-secret config can go here as plain vars, e.g.:
+# [vars]
+# NEXT_PUBLIC_SITE_URL = "https://example.com"
+#
+# Secrets (NEON_DATABASE_URL, AUTH_SECRET, RESEND_API_KEY) are NOT stored in
+# this file. Set them with `wrangler secret put <NAME>` before deploying -
+# see CLAUDE.md for the full list and local dev instructions.
+
+[observability]
+enabled = true

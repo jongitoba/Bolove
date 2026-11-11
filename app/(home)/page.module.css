@@ -1,0 +1,426 @@
+/* Design handoff: "Bolove landing page, direction 1a — confident & premium".
+   Deliberately its own fixed dark palette (deep green-black + gold), not the
+   light/dark-reactive neutral theme the rest of the site uses - same idea as
+   solkalkulator's map/report screen keeping its own fixed dark identity. */
+
+.page {
+  background: #151a17;
+  color: #f3f0ea;
+  min-height: 100dvh;
+  font-family: var(--font-inter), Inter, sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 22px 40px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.wordmark {
+  font-family: var(--font-fraunces), serif;
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: 0.02em;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  font-size: 13px;
+  color: rgba(243, 240, 234, 0.75);
+}
+
+.nav a {
+  color: inherit;
+}
+
+.nav a:hover {
+  color: #f3f0ea;
+}
+
+.navCta {
+  background: #c9a15a;
+  color: #151a17 !important;
+  padding: 9px 18px;
+  border-radius: 2px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.navCta:hover {
+  background: #d9b16a;
+}
+
+.hero {
+  padding: 64px 40px 48px;
+  text-align: center;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #c9a15a;
+  margin-bottom: 18px;
+}
+
+.headline {
+  font-family: var(--font-fraunces), serif;
+  font-weight: 400;
+  font-size: 46px;
+  line-height: 1.12;
+  max-width: 640px;
+  margin: 0 auto 18px;
+}
+
+.subhead {
+  font-size: 15px;
+  color: rgba(243, 240, 234, 0.65);
+  max-width: 460px;
+  margin: 0 auto 34px;
+}
+
+.addressForm {
+  display: flex;
+  max-width: 480px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  /* No overflow:hidden here (unlike before the address dropdown existed) -
+     it would clip the dropdown, which is positioned absolutely inside
+     .addressFieldWrap and needs to extend below this box. */
+}
+
+.addressFieldWrap {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.addressInput {
+  width: 100%;
+  background: none;
+  border: none;
+  color: #f3f0ea;
+  padding: 16px 18px;
+  font-size: 15px;
+  font-family: var(--font-inter), Inter, sans-serif;
+  outline: none;
+}
+
+.addressInput::placeholder {
+  color: rgba(243, 240, 234, 0.4);
+}
+
+.addressDropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 20;
+  list-style: none;
+  margin: 0;
+  padding: 4px;
+  background: #1c231f;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  max-height: 240px;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.addressOption {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 2px;
+  background: none;
+  color: #f3f0ea;
+  font-size: 14px;
+  font-family: var(--font-inter), Inter, sans-serif;
+  cursor: pointer;
+}
+
+.addressOption:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.addressSubmit {
+  background: #c9a15a;
+  color: #151a17;
+  padding: 16px 26px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-inter), Inter, sans-serif;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.addressSubmit:hover {
+  background: #d9b16a;
+}
+
+.addressSubmit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.addressSubmit:disabled:hover {
+  background: #c9a15a;
+}
+
+.finePrint {
+  font-size: 12px;
+  color: rgba(243, 240, 234, 0.4);
+  margin-top: 14px;
+}
+
+.toolsSection {
+  padding-bottom: 56px;
+}
+
+.tabBarWrap {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.tabPanelWrap {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.tabBar {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  margin-bottom: 28px;
+  font-size: 13px;
+  overflow-x: auto;
+}
+
+.tab {
+  padding: 12px 20px;
+  color: rgba(243, 240, 234, 0.45);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: var(--font-inter), Inter, sans-serif;
+  font-size: 13px;
+}
+
+.tab:hover {
+  color: rgba(243, 240, 234, 0.75);
+}
+
+.tabActive,
+.tabActive:hover {
+  color: #f3f0ea;
+  border-bottom-color: #c9a15a;
+}
+
+.tabPanel {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 32px;
+  align-items: center;
+}
+
+.tabQuestion {
+  font-family: var(--font-fraunces), serif;
+  font-weight: 600;
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.tabExplainer {
+  font-size: 14px;
+  color: rgba(243, 240, 234, 0.6);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.statRow {
+  display: flex;
+  gap: 22px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.statValue {
+  font-family: var(--font-fraunces), serif;
+  font-weight: 600;
+  font-size: 26px;
+  color: #c9a15a;
+}
+
+.statLabel {
+  font-size: 11px;
+  color: rgba(243, 240, 234, 0.5);
+}
+
+.diagramPlaceholder {
+  height: 220px;
+  border-radius: 2px;
+  color: rgba(243, 240, 234, 0.4);
+  background: repeating-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.05) 0 10px,
+    rgba(255, 255, 255, 0.02) 10px 20px
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 11px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.comingSoon {
+  padding: 3rem 0;
+  text-align: center;
+  color: rgba(243, 240, 234, 0.45);
+  font-size: 14px;
+}
+
+/* Embedded live tools (paid users only - see HomeContent). These reuse the
+   exact same components as /solkalkulator, /kart etc., which normally
+   follow the site's light/dark toggle via var(--background)/var(--foreground)
+   (see CLAUDE.md "solkalkulator"). This page has its own fixed dark identity
+   regardless of OS theme, so those tokens are pinned here to match it -
+   otherwise a visitor in light mode would see a white header/panel float
+   inside this always-dark page.
+
+   Full width/edge-to-edge, unlike the rest of the page's 960px content
+   column - this is the tool itself, not marketing copy, so it gets the
+   full screen. */
+.toolEmbed,
+.toolEmbedBounded {
+  --background: #151a17;
+  --foreground: #f3f0ea;
+  position: relative;
+  width: 100%;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+}
+
+.toolEmbedBounded {
+  height: 620px;
+}
+
+.toolEmbed:fullscreen,
+.toolEmbedBounded:fullscreen {
+  height: 100dvh;
+  border: none;
+  background: #151a17;
+}
+
+.toolEmbed:fullscreen {
+  overflow-y: auto;
+}
+
+.fullscreenButton {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(21, 26, 23, 0.8);
+  color: #f3f0ea;
+  cursor: pointer;
+}
+
+.fullscreenButton:hover {
+  background: rgba(21, 26, 23, 1);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Reisetid only - clears MapLibre's own zoom/compass control, which sits
+   in that same corner there (see ToolTab.fullscreenButtonOffset). */
+.fullscreenButtonOffset {
+  top: 110px;
+}
+
+@media (max-width: 720px) {
+  .toolEmbedBounded {
+    height: 480px;
+  }
+}
+
+@media (max-width: 720px) {
+  .header {
+    padding: 16px 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .nav {
+    gap: 16px;
+    font-size: 12px;
+  }
+
+  .hero {
+    padding: 48px 20px 36px;
+  }
+
+  .headline {
+    font-size: 32px;
+  }
+
+  .toolsSection {
+    padding-bottom: 40px;
+  }
+
+  .tabBarWrap,
+  .tabPanelWrap {
+    padding: 0 20px;
+  }
+
+  /* At this width the 6 tabs no longer fit (measured: ~486px of content
+     vs. ~335px available), so the row scrolls horizontally - centering it
+     (fine on wide screens where it never scrolls) pushes the first tab to
+     a negative offset that's stuck unreachable at scrollLeft 0. Left-align
+     instead so the row starts, as expected, on its first tab. */
+  .tabBar {
+    justify-content: flex-start;
+  }
+
+  .tabPanel {
+    grid-template-columns: 1fr;
+  }
+
+  .addressForm {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,367 @@
+/* Ported from balcony-sun's src/style.css. That file assumed it owned the
+   whole document (`*` reset, `html, body` rules, unscoped `input[type=range]`)
+   because it was the only thing on the page. Here every rule is scoped under
+   `.solkalkulator-widget` so it can't leak into the rest of the site - see
+   CLAUDE.md "solkalkulator (sun calculator)". Properties/values are
+   unchanged from the original except `.screen`'s height (100vh -> 100%,
+   since this now fills a container instead of the whole viewport) and the
+   two @keyframes names (prefixed to avoid colliding with any other
+   animation of the same name elsewhere on the site). */
+
+.solkalkulator-widget,
+.solkalkulator-widget *,
+.solkalkulator-widget *::before,
+.solkalkulator-widget *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.solkalkulator-widget {
+  --bg:       #0a0a16;
+  --surface:  #12122a;
+  --surface2: #1a1a38;
+  --border:   #2a2a55;
+  --accent:   #ff7700;
+  --accent2:  #4477ff;
+  --text:     #e8e8f0;
+  --muted:    #8888aa;
+  --sun-none: #1e1e3a;
+  --sun-part: #b85c00;
+  --sun-full: #f5c842;
+  --radius:   10px;
+
+  height: 100%;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+  position: relative;
+}
+
+/* ── Screens ─────────────────────────────────────────────────────────────── */
+.solkalkulator-widget .screen { height: 100%; overflow: hidden; flex-direction: column }
+
+/* ── Main screen ──────────────────────────────────────────────────────────── */
+.solkalkulator-widget #main-screen { overflow: hidden }
+
+/* Header + report panel use the site's own theme tokens (var(--background)/
+   var(--foreground) from app/globals.css) instead of the widget's --surface/
+   --border/--muted/--text/--accent, so they read light/dark like the rest of
+   the site - see CLAUDE.md "solkalkulator". Those shared widget vars are left
+   untouched since scene-side (map, sliders, hints) still relies on them. */
+.solkalkulator-widget .main-header {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--background);
+  border-bottom: 1px solid rgba(127, 127, 127, 0.3);
+  z-index: 10;
+}
+
+.solkalkulator-widget .main-header h1 { font-size: 1.1rem; font-weight: 700; color: var(--foreground) }
+
+.solkalkulator-widget #main-addr {
+  font-size: 0.85rem;
+  color: #666;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@media (prefers-color-scheme: dark) {
+  .solkalkulator-widget #main-addr { color: #aaa }
+}
+
+.solkalkulator-widget .btn-sm {
+  background: transparent;
+  border: 1px solid rgba(127, 127, 127, 0.3);
+  color: var(--foreground);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.solkalkulator-widget .btn-sm:hover { background: rgba(127, 127, 127, 0.12) }
+
+.solkalkulator-widget .main-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  overflow: hidden;
+}
+
+/* Scene side */
+.solkalkulator-widget .scene-side {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.solkalkulator-widget #scene-canvas {
+  flex: 1;
+  width: 100%;
+  display: block;
+  min-height: 0;
+}
+
+/* Slider bar (Dato/Tid) uses the site's own theme tokens, same reasoning as
+   the header/report panel above - only #scene-canvas and its overlays
+   (placement hint, loading/error) stay on the widget's own dark --surface/
+   --border/--accent vars, since those sit directly on top of the 3D map. */
+.solkalkulator-widget .slider-bar {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 1.5rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--background);
+  border-top: 1px solid rgba(127, 127, 127, 0.3);
+}
+
+.solkalkulator-widget .slider-group {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 1;
+}
+
+.solkalkulator-widget .slider-group label {
+  font-size: 0.75rem;
+  color: #666;
+  white-space: nowrap;
+  min-width: 90px;
+}
+@media (prefers-color-scheme: dark) {
+  .solkalkulator-widget .slider-group label { color: #aaa }
+}
+
+.solkalkulator-widget .slider-group label strong {
+  color: var(--foreground);
+  font-variant-numeric: tabular-nums;
+}
+
+.solkalkulator-widget input[type=range] {
+  flex: 1;
+  accent-color: #171717;
+}
+@media (prefers-color-scheme: dark) {
+  .solkalkulator-widget input[type=range] { accent-color: #ededed }
+}
+
+/* Report side */
+.solkalkulator-widget .report-side {
+  overflow-y: auto;
+  background: var(--background);
+  color: var(--foreground);
+  border-left: 1px solid rgba(127, 127, 127, 0.3);
+}
+
+.solkalkulator-widget #report-container { padding: 1.25rem }
+
+/* Loading / error */
+.solkalkulator-widget #main-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background: #0a0a16cc;
+  backdrop-filter: blur(4px);
+  z-index: 20;
+}
+.solkalkulator-widget #main-loading p { color: var(--muted); font-size: 0.9rem }
+
+.solkalkulator-widget .spinner {
+  width: 40px; height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: solkalkulator-spin 0.8s linear infinite;
+}
+@keyframes solkalkulator-spin { to { transform: rotate(360deg) } }
+
+.solkalkulator-widget #main-error {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  background: #660000dd;
+  color: #ffaaaa;
+  padding: 1rem 1.5rem;
+  font-size: 0.9rem;
+  z-index: 30;
+  border-bottom: 1px solid #aa0000;
+}
+
+.solkalkulator-widget #placement-hint {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  background: #12123add;
+  color: var(--text);
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9rem;
+  text-align: center;
+  z-index: 25;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── Report panel ─────────────────────────────────────────────────────────── */
+.solkalkulator-widget .report { display: flex; flex-direction: column; gap: 1rem }
+.solkalkulator-widget .report-title { font-size: 1.1rem; font-weight: 700 }
+.solkalkulator-widget .section-title { font-size: 0.75rem; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: 0.08em }
+@media (prefers-color-scheme: dark) {
+  .solkalkulator-widget .section-title { color: #aaa }
+}
+
+.solkalkulator-widget .summary-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem }
+.solkalkulator-widget .summary-card {
+  border: 1px solid rgba(127, 127, 127, 0.3);
+  border-radius: 8px;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.solkalkulator-widget .sc-label { font-size: 0.7rem; color: #666; text-transform: uppercase; letter-spacing: 0.06em }
+.solkalkulator-widget .sc-value { font-size: 1.4rem; font-weight: 800; color: #b45309; line-height: 1 }
+.solkalkulator-widget .sc-unit { font-size: 0.75rem; font-weight: 400; color: #666 }
+@media (prefers-color-scheme: dark) {
+  .solkalkulator-widget .sc-label { color: #aaa }
+  .solkalkulator-widget .sc-value { color: #fbbf24 }
+  .solkalkulator-widget .sc-unit { color: #aaa }
+}
+
+/* Bar chart */
+.solkalkulator-widget .bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 90px;
+  padding-bottom: 20px;
+}
+
+.solkalkulator-widget .bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  cursor: pointer;
+  gap: 2px;
+}
+
+.solkalkulator-widget .bar-inner {
+  width: 100%;
+  background: rgba(127, 127, 127, 0.25);
+  border-radius: 3px 3px 0 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  transition: background 0.2s;
+  position: relative;
+  min-height: 4px;
+}
+.solkalkulator-widget .bar-inner .bar-val { font-size: 0.55rem; color: transparent; padding-top: 2px }
+.solkalkulator-widget .bar-col:hover .bar-inner, .solkalkulator-widget .bar-col.bar-active .bar-inner { background: #d97706 }
+.solkalkulator-widget .bar-col.bar-active .bar-inner .bar-val { color: #fff }
+.solkalkulator-widget .bar-lbl { font-size: 0.55rem; color: #666 }
+.solkalkulator-widget .bar-col.bar-active .bar-lbl { color: #d97706 }
+@media (prefers-color-scheme: dark) {
+  .solkalkulator-widget .bar-lbl { color: #aaa }
+  .solkalkulator-widget .bar-col:hover .bar-inner, .solkalkulator-widget .bar-col.bar-active .bar-inner { background: #f59e0b }
+  .solkalkulator-widget .bar-col.bar-active .bar-lbl { color: #f59e0b }
+}
+
+/* Heatmap */
+.solkalkulator-widget .heatmap-wrap { overflow-x: auto }
+
+.solkalkulator-widget .heatmap-hour-row {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  margin-bottom: 2px;
+}
+.solkalkulator-widget .hm-month-spacer { width: 28px; flex-shrink: 0 }
+.solkalkulator-widget .hm-hour-lbl {
+  flex: 1;
+  font-size: 0.55rem;
+  color: #666;
+  text-align: center;
+  min-width: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  .solkalkulator-widget .hm-hour-lbl { color: #aaa }
+}
+
+.solkalkulator-widget .heatmap-body { display: flex; flex-direction: column; gap: 1px }
+.solkalkulator-widget .hm-row { display: flex; align-items: center; gap: 1px }
+.solkalkulator-widget .hm-month-lbl { width: 28px; flex-shrink: 0; font-size: 0.6rem; color: #666 }
+@media (prefers-color-scheme: dark) {
+  .solkalkulator-widget .hm-month-lbl { color: #aaa }
+}
+.solkalkulator-widget .hm-row.hm-row-active .hm-month-lbl { color: #d97706 }
+@media (prefers-color-scheme: dark) {
+  .solkalkulator-widget .hm-row.hm-row-active .hm-month-lbl { color: #f59e0b }
+}
+
+.solkalkulator-widget .hm-cell {
+  flex: 1;
+  min-width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  cursor: default;
+  transition: transform 0.1s;
+}
+.solkalkulator-widget .hm-cell:hover { transform: scale(1.3); z-index: 2; position: relative }
+
+.solkalkulator-widget .hm-cell.i0 { background: rgba(127, 127, 127, 0.15) }
+.solkalkulator-widget .hm-cell.i1 { background: #d97706 }
+.solkalkulator-widget .hm-cell.i2 { background: #f5c842 }
+
+.solkalkulator-widget .hm-cell.hm-active {
+  outline: 2px solid var(--foreground);
+  outline-offset: 1px;
+  z-index: 3;
+  position: relative;
+}
+
+/* Peak window */
+.solkalkulator-widget .peak-window {
+  border: 1px solid rgba(127, 127, 127, 0.3);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+}
+.solkalkulator-widget .peak-none { color: #666 }
+.solkalkulator-widget .peak-info { color: var(--foreground) }
+@media (prefers-color-scheme: dark) {
+  .solkalkulator-widget .peak-none { color: #aaa }
+}
+
+/* Legend */
+.solkalkulator-widget .legend { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap }
+.solkalkulator-widget .leg-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; color: #666 }
+@media (prefers-color-scheme: dark) {
+  .solkalkulator-widget .leg-item { color: #aaa }
+}
+.solkalkulator-widget .leg-dot { width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0 }
+.solkalkulator-widget .leg-dot.i0 { background: rgba(127, 127, 127, 0.15); border: 1px solid rgba(127, 127, 127, 0.3) }
+.solkalkulator-widget .leg-dot.i1 { background: #d97706 }
+.solkalkulator-widget .leg-dot.i2 { background: #f5c842 }
+
+.solkalkulator-widget .report-loading { color: #666; font-size: 0.9rem; padding: 2rem; text-align: center }
+@media (prefers-color-scheme: dark) {
+  .solkalkulator-widget .report-loading { color: #aaa }
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .solkalkulator-widget .main-body { grid-template-columns: 1fr; grid-template-rows: 1fr auto }
+  .solkalkulator-widget .report-side { max-height: 45vh }
+  .solkalkulator-widget .slider-bar { flex-direction: column; gap: 0.5rem }
+}

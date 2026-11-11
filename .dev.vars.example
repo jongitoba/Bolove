@@ -1,0 +1,9 @@
+# Local equivalent of `wrangler secret put`. Copy to `.dev.vars` and fill in.
+# Read at runtime via getCloudflareContext().env - works under both
+# `npm run dev` (thanks to initOpenNextCloudflareForDev in next.config.ts)
+# and `npm run cf:preview` (wrangler dev).
+NEON_DATABASE_URL=
+AUTH_SECRET=
+RESEND_API_KEY=
+# Optional, defaults to a Resend sandbox address:
+# AUTH_EMAIL_FROM=Bolove <onboarding@resend.dev>

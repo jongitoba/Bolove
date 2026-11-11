@@ -1,0 +1,359 @@
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 4rem;
+  width: 100%;
+}
+
+.wrap h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.intro {
+  color: #666;
+  margin-bottom: 2rem;
+  max-width: 640px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .intro {
+    color: #aaa;
+  }
+}
+
+.card {
+  border: 1px solid rgba(127, 127, 127, 0.3);
+  border-radius: 10px;
+  padding: 1.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.field {
+  margin-bottom: 1.5rem;
+}
+
+.field:last-child {
+  margin-bottom: 0;
+}
+
+.fieldHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.fieldHeader label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.value {
+  font-variant-numeric: tabular-nums;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .value {
+    color: #aaa;
+  }
+}
+
+.field input[type="range"] {
+  width: 100%;
+  accent-color: #171717;
+  margin-bottom: 0.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .field input[type="range"] {
+    accent-color: #ededed;
+  }
+}
+
+.numberInput {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid rgba(127, 127, 127, 0.3);
+  background: transparent;
+  color: inherit;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.numberInput:focus {
+  outline: 2px solid #171717;
+  outline-offset: -1px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .numberInput:focus {
+    outline-color: #ededed;
+  }
+}
+
+.countRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+  border-top: 1px solid rgba(127, 127, 127, 0.3);
+}
+
+.countLabel {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.countButtons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.countButton {
+  min-width: 2.5rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid rgba(127, 127, 127, 0.3);
+  background: transparent;
+  color: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.countButtonActive {
+  background: #171717;
+  color: #fff;
+  border-color: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  .countButtonActive {
+    background: #ededed;
+    color: #0a0a0a;
+    border-color: #ededed;
+  }
+}
+
+.summaryStats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+  border-top: 1px solid rgba(127, 127, 127, 0.3);
+}
+
+.summaryStat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.summaryLabel {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .summaryLabel {
+    color: #aaa;
+  }
+}
+
+.summaryValue {
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.warning {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  background: rgba(234, 88, 12, 0.12);
+  color: #c2410c;
+}
+
+@media (prefers-color-scheme: dark) {
+  .warning {
+    color: #fb923c;
+  }
+}
+
+.personGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 800px) {
+  .personGrid {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+.personCard {
+  border: 1px solid rgba(127, 127, 127, 0.3);
+  border-radius: 10px;
+  padding: 1.75rem;
+}
+
+.personHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.personTitleInput {
+  font-weight: 700;
+  font-size: 1.1rem;
+  min-width: 0;
+  flex: 1;
+  padding: 0.15rem 0.35rem;
+  margin-left: -0.35rem;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+}
+
+.personTitleInput:hover {
+  border-color: rgba(127, 127, 127, 0.3);
+}
+
+.personTitleInput:focus {
+  outline: none;
+  border-color: rgba(127, 127, 127, 0.5);
+  background: rgba(127, 127, 127, 0.08);
+}
+
+.ownershipBadge {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(127, 127, 127, 0.12);
+}
+
+.resultHighlight {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(127, 127, 127, 0.3);
+}
+
+.resultLabel {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .resultLabel {
+    color: #aaa;
+  }
+}
+
+.resultValue {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.resultList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.resultRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.95rem;
+}
+
+.resultRow dt {
+  color: #666;
+}
+
+@media (prefers-color-scheme: dark) {
+  .resultRow dt {
+    color: #aaa;
+  }
+}
+
+.resultRow dd {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.resultDivider {
+  border-top: 1px solid rgba(127, 127, 127, 0.3);
+  margin: 0.25rem 0;
+}
+
+.resultRowTotal {
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(127, 127, 127, 0.3);
+}
+
+.resultRowTotal dd {
+  font-size: 1.1rem;
+}
+
+.removeButton {
+  margin-top: 1.5rem;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #666;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+@media (prefers-color-scheme: dark) {
+  .removeButton {
+    color: #aaa;
+  }
+}
+
+.addButton {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  border: 1px dashed rgba(127, 127, 127, 0.5);
+  background: transparent;
+  color: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 2rem;
+}
+
+.disclaimer {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+@media (prefers-color-scheme: dark) {
+  .disclaimer {
+    color: #aaa;
+  }
+}

@@ -1,0 +1,20 @@
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
+}
+
+.wrap h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.wrap p {
+  color: #666;
+}
+
+@media (prefers-color-scheme: dark) {
+  .wrap p {
+    color: #aaa;
+  }
+}
