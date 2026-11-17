@@ -2,79 +2,53 @@
 
 # Bolove
 
-Norwegian real estate tools website.
+Norwegian real estate tools website. **Free and public** — no login, no accounts, no
+payments, no database. Displayed as a portfolio project on jonoba.no (the homepage header
+links back there).
 
 ## Stack
 
 - **Next.js 15** (App Router, TypeScript, plain CSS Modules — no Tailwind).
 - **Deployment: Cloudflare Workers** via `@opennextjs/cloudflare` (OpenNext). Config in
   [`wrangler.toml`](wrangler.toml) and [`open-next.config.ts`](open-next.config.ts).
-- **Database: Neon Postgres** via `@neondatabase/serverless` (HTTP driver — no TCP), with
-  **Drizzle ORM**. Schema in [`db/schema.ts`](db/schema.ts).
-- **Auth: Auth.js (NextAuth v5)** with email magic links via **Resend**, using
-  `@auth/drizzle-adapter`. Config in [`auth.ts`](auth.ts).
+- No server-side state. The only server code is two stateless API routes
+  ([`app/api/geocode`](app/api/geocode/route.ts), [`app/api/noise`](app/api/noise/route.ts))
+  that proxy/combine public Norwegian open-data APIs.
 
 ## The Workers runtime constraint
 
-Everything under `app/`, `middleware.ts`, `auth.ts`, and any server action ultimately runs
-inside a Cloudflare Worker, not Node.js. This means:
+Everything under `app/` (including API routes and any server action) ultimately runs inside a
+Cloudflare Worker, not Node.js. This means:
 
 - **No Node-only APIs.** No `fs`, no `net`/TCP sockets, no `node:child_process`, no native
   addons. `nodejs_compat` is enabled in `wrangler.toml`, which covers a good chunk of Node's
   standard library, but don't assume something works there — check the
   [OpenNext Cloudflare compatibility notes](https://opennext.js.org/cloudflare) if unsure.
-- **Database access must be HTTP-based.** That's why we use `@neondatabase/serverless`'s HTTP
-  driver instead of `pg`/`node-postgres` — a raw TCP driver cannot run in a Worker.
-- **Env vars and secrets are per-request, not module-global.** Cloudflare bindings/vars/secrets
-  are only reliably available via `getCloudflareContext({ async: true })`, and only once a
-  request is actually in flight. Don't read `env.SOMETHING` at module top-level (it may run
-  before any request exists) — read it lazily, inside a function that executes per-request.
-  This is why [`auth.ts`](auth.ts) builds its NextAuth config inside an async factory function
-  instead of as a static object, and why [`db/index.ts`](db/index.ts) exports a `getDb(url)`
-  factory instead of a ready-made client.
+  If a database is ever added, it must use an HTTP-based driver (e.g. Neon's), not TCP `pg`.
+- **Env vars and secrets are per-request, not module-global.** If server-side secrets are
+  ever needed, Cloudflare bindings/vars/secrets are only reliably available via
+  `getCloudflareContext({ async: true })`, and only once a request is in flight — read them
+  lazily inside a per-request function, never at module top-level. Declare them in
+  [`cloudflare-env.d.ts`](cloudflare-env.d.ts) (currently empty).
 - **Local dev mirrors this on purpose.** `initOpenNextCloudflareForDev()` in
   [`next.config.ts`](next.config.ts) makes `getCloudflareContext()` work under plain
   `next dev`, reading from `.dev.vars` (not `.env.local`) — the same file format
-  `wrangler dev` uses. This catches Workers-incompatible code early instead of only at deploy
-  time.
+  `wrangler dev` uses.
 
-## Entitlement model
+## Site structure
 
-There is a **single column**, `users.access_expires_at` (a timestamp), and nothing else —
-no `role`, no `plan`, no `tier`. A user has access if and only if:
+- `app/(home)/` — the landing page (`/`): address search plus a tab bar that embeds every
+  tool inline (`toolTabs.tsx` / `ToolsSection.tsx`). An address picked there is passed to the
+  tools that can use it (Solkalkulator, Reisetid, Støynivå).
+- `app/(tools)/` — each tool also has its own standalone page (`/solkalkulator`, `/kart`,
+  `/lanekalkulator`, `/eierbrok`, `/reisetid`, `/stoynivaa`), sharing the `(tools)` layout and
+  [`components/site-header.tsx`](components/site-header.tsx).
 
-```
-session exists AND access_expires_at > now()
-```
+## Adding a new tool
 
-This is enforced in [`middleware.ts`](middleware.ts), which matches every route under the
-`(paid)` route group and redirects to `/pricing` if the check fails. It's re-derived (not
-cached) from the session on every request via NextAuth's `session` callback in
-[`auth.ts`](auth.ts), which copies `accessExpiresAt` from the adapter's `user` record onto
-`session.user`.
-
-Right now the pricing page has a **dev-only "Gi 30 dagers tilgang" button**
-([`app/(marketing)/pricing/actions.ts`](app/(marketing)/pricing/actions.ts)) that sets
-`access_expires_at = now() + 30 days` directly — a stand-in for a real purchase. It's gated
-on `process.env.NODE_ENV !== "production"`, so it disappears the moment the app is built for
-deployment. When real payments are added (Stripe), replace that button/action with a checkout
-flow whose webhook does the same `UPDATE users SET access_expires_at = ...` — the entitlement
-check itself (middleware, schema) should not need to change.
-
-Don't add a `role`/`plan` column later without a real reason (e.g. multiple paid tiers with
-different feature sets). As long as it's one flat product, one expiry timestamp is the whole
-model.
-
-## Adding a new paid tool
-
-1. Create a folder under `app/(paid)/`, e.g. `app/(paid)/verditakst/page.tsx`.
-2. Add the matching pattern to `middleware.ts`'s `matcher` array (e.g.
-   `"/verditakst/:path*"`).
-3. That's it — no other wiring. The `(paid)` layout already renders the shared header, and
-   the middleware match is the only thing that decides what's gated.
-
-Anything public (landing content, pricing, legal pages, login) goes under `app/(marketing)/`
-instead, and needs no middleware changes.
+1. Create a folder under `app/(tools)/`, e.g. `app/(tools)/verditakst/page.tsx`.
+2. Add a link to it in `components/site-header.tsx`, and (optionally) a tab entry in
+   `app/(home)/toolTabs.tsx` so it shows up embedded on the homepage.
 
 ## `/kart` (map)
 
@@ -87,20 +61,19 @@ called directly from the browser.
 
 Because MapLibre needs a real DOM/WebGL context and `usePrefersDark` reads `window`
 synchronously (not inside an effect), this whole subtree is loaded client-only via
-`next/dynamic(..., { ssr: false })` in [`app/(paid)/kart/KartLoader.tsx`](app/(paid)/kart/KartLoader.tsx)
+`next/dynamic(..., { ssr: false })` in [`app/(tools)/kart/KartLoader.tsx`](app/(tools)/kart/KartLoader.tsx)
 — `page.tsx` itself stays a plain Server Component. Every component under
-`app/(paid)/kart/` carries its own `"use client"` directive. Static boundary GeoJSON lives in
+`app/(tools)/kart/` carries its own `"use client"` directive. Static boundary GeoJSON lives in
 [`public/data/`](public/data/) (fylker, kommuner, Oslo bydeler/grunnkretser), referenced by
 absolute `/data/*.geojson` URLs from `config/layers.ts`.
 
-New paid tools normally need zero extra wiring beyond the middleware matcher (see above) — this
-one is the exception in one respect: it needs its own `NEXT_PUBLIC_*` vars (below), because it
+New tools normally need no extra config — this one is the exception in one respect: it needs its own `NEXT_PUBLIC_*` vars (below), because it
 was ported from a Vite app that used `import.meta.env.VITE_*` for the same purpose.
 
 ## `/solkalkulator` (3D sun calculator)
 
 Ported from a standalone vanilla-TS/Vite app (`balcony-sun`) as a **wrapper, not a rewrite** —
-it is deliberately *not* React underneath. `app/(paid)/solkalkulator/lib/` is close to a
+it is deliberately *not* React underneath. `app/(tools)/solkalkulator/lib/` is close to a
 verbatim copy of that app's `src/`: a plain state object, direct DOM wiring, a `Scene3D` class
 (MapLibre GL, 3D terrain/sky/light, building-shadow approximation) and a `ReportPanel` class
 (innerHTML template strings), driven by SunCalc-based astronomy math in `lib/solar.ts`. None of
@@ -179,16 +152,16 @@ every `document.getElementById(...)` became `container.querySelector(...)`, and 
 used to live in `index.html` (the landing/compass/main "screens") is injected by `init()` into
 `container.innerHTML`. Nothing else about its control flow changed.
 
-[`SolkalkulatorApp.tsx`](app/(paid)/solkalkulator/SolkalkulatorApp.tsx) is the *entire* React
+[`SolkalkulatorApp.tsx`](app/(tools)/solkalkulator/SolkalkulatorApp.tsx) is the *entire* React
 surface for this tool: a `useEffect` that calls `init(container)` on mount and `destroy(container)`
 on cleanup, wrapping a bare `<div>`. Like `/kart`, the real app is loaded client-only via
 `next/dynamic(..., { ssr: false })` in
-[`SolkalkulatorLoader.tsx`](app/(paid)/solkalkulator/SolkalkulatorLoader.tsx), since MapLibre
+[`SolkalkulatorLoader.tsx`](app/(tools)/solkalkulator/SolkalkulatorLoader.tsx), since MapLibre
 needs a real DOM/WebGL context.
 
 **CSS scoping:** the original `style.css` assumed it was the only stylesheet on the page —
 a universal `*` reset, unscoped `html, body` rules, an unscoped `input[type=range]` selector.
-[`solkalkulator.css`](app/(paid)/solkalkulator/solkalkulator.css) is that file with every
+[`solkalkulator.css`](app/(tools)/solkalkulator/solkalkulator.css) is that file with every
 selector prefixed under `.solkalkulator-widget` (which `init()` adds to the container), so
 none of it leaks onto the rest of the site. It is **not** a CSS Module — `lib/compass.ts` and
 `lib/report.ts` reference plain string class names (`'.bar-col'`, `'#hm-body'`, etc.) in their
@@ -237,30 +210,14 @@ day with v1.9.0 vs. an erratic non-monotonic sequence with v2.0.1, same input, s
 `suncalc` ever needs upgrading, either update to v2's degrees-based API **and** update
 `solar.ts`'s conversion math to match, or stay pinned to the v1.x line — don't let it float.
 
-## Environment variables / secrets
+## Environment variables
 
-Three server-side secrets, used identically whether local or deployed:
-
-| Name | Purpose |
-|---|---|
-| `NEON_DATABASE_URL` | Neon Postgres connection string (HTTP driver) |
-| `AUTH_SECRET` | Auth.js session/token encryption secret |
-| `RESEND_API_KEY` | Resend API key for sending magic-link emails |
-
-- **Local (`next dev` or `wrangler dev`):** copy `.dev.vars.example` → `.dev.vars` and fill
-  in. Read via `getCloudflareContext().env` at runtime.
-- **drizzle-kit CLI only** (`db:generate`/`db:migrate`/`db:studio`, which run as plain Node,
-  outside the Worker): copy `.env.example` → `.env.local` and set `NEON_DATABASE_URL` there
-  too. `drizzle.config.ts` loads it directly.
-- **Deployed:** `wrangler secret put NEON_DATABASE_URL` (and the same for `AUTH_SECRET`,
-  `RESEND_API_KEY`) — never put secrets in `wrangler.toml`.
-
-### `/kart` (map) env vars — different mechanism, don't confuse with the above
+There are no server-side secrets. The only env vars are client-side map keys:
 
 | Name | Purpose |
 |---|---|
 | `NEXT_PUBLIC_MAP_PROVIDER` | Basemap provider switch, currently only `"maplibre"` |
-| `NEXT_PUBLIC_MAPTILER_API_KEY` | MapTiler key for `/kart`'s basemap style URL |
+| `NEXT_PUBLIC_MAPTILER_API_KEY` | MapTiler key for `/kart`'s (and `/reisetid`'s) basemap style URL |
 | `NEXT_PUBLIC_MAPTILER_KEY` | MapTiler key for `/solkalkulator`'s basemap + terrain URLs (separate var, ported name-for-name from that app's own `VITE_MAPTILER_KEY` — not consolidated with the one above) |
 
 These are `NEXT_PUBLIC_` vars, not secrets accessed via `getCloudflareContext()` — Next.js
@@ -276,9 +233,8 @@ completely independent of Cloudflare bindings. That means:
 ## Commands
 
 ```bash
-npm run dev          # next dev (getCloudflareContext works via .dev.vars)
-npm run db:generate   # generate a Drizzle migration from db/schema.ts
-npm run db:migrate    # apply migrations to NEON_DATABASE_URL
+npm run dev           # next dev
+npm test              # vitest
 npm run cf:preview    # opennextjs-cloudflare build + wrangler dev (real Worker locally)
 npm run cf:deploy     # opennextjs-cloudflare build + wrangler deploy
 ```

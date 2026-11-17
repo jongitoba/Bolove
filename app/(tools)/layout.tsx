@@ -1,9 +1,8 @@
 import { SiteHeader } from "@/components/site-header";
 import styles from "./layout.module.css";
 
-// Access control for everything in this group lives in middleware.ts, which
-// matches /solkalkulator/:path* and /kart/:path*. Any new paid tool just
-// needs its folder added under (paid)/ and to middleware's matcher.
+// Shared shell for every standalone tool page (/solkalkulator, /kart, ...).
+// All tools are free and public - no auth or gating.
 //
 // The shell is its own bounded 100dvh flex column (independent of the
 // global body sizing in app/globals.css, which marketing pages rely on for
@@ -11,7 +10,7 @@ import styles from "./layout.module.css";
 // space below the header via `height: 100%`, with no hardcoded header
 // height. Plain-content pages like /solkalkulator are unaffected - they
 // just render at their natural height inside the flex column.
-export default function PaidLayout({
+export default function ToolsLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

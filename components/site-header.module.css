@@ -24,8 +24,7 @@
   font-size: 0.95rem;
 }
 
-/* Logged-in users see 7 links here (Priser + 5 tools + Logg ut) - on a
-   narrow viewport that overflows a single nowrap row and gets cut off at
+/* 6 tool links here - on a narrow viewport that overflows a single nowrap row and gets cut off at
    the edge. Wrapping (above) already fixes reachability; this just brings
    spacing/size in line with the rest of the site's own mobile breakpoint
    (see app/(home)/page.module.css's equivalent .header/.nav rules). */
@@ -40,18 +39,4 @@
     gap: 0.5rem 1rem;
     font-size: 0.85rem;
   }
-}
-
-.linkButton {
-  background: none;
-  border: none;
-  padding: 0;
-  font: inherit;
-  color: inherit;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.linkButton:hover {
-  text-decoration: underline;
 }

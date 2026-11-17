@@ -1,5 +1,4 @@
 import { Fraunces, Inter } from "next/font/google";
-import { auth } from "@/auth";
 import HomeHeader from "./HomeHeader";
 import HomeContent from "./HomeContent";
 import styles from "./page.module.css";
@@ -16,17 +15,11 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-export default async function HomePage() {
-  const session = await auth();
-  const expiresAt = session?.user?.accessExpiresAt
-    ? new Date(session.user.accessExpiresAt)
-    : null;
-  const hasAccess = !!expiresAt && expiresAt > new Date();
-
+export default function HomePage() {
   return (
     <div className={`${styles.page} ${fraunces.variable} ${inter.variable}`}>
       <HomeHeader />
-      <HomeContent hasAccess={hasAccess} />
+      <HomeContent />
     </div>
   );
 }

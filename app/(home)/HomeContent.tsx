@@ -1,14 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
 import ToolsSection from "./ToolsSection";
 import type { GeocodedAddress } from "@/lib/geocode";
 import styles from "./page.module.css";
-
-interface Props {
-  hasAccess: boolean;
-}
 
 interface RawGeocodeResult {
   lat: string;
@@ -16,8 +11,7 @@ interface RawGeocodeResult {
   label: string;
 }
 
-export default function HomeContent({ hasAccess }: Props) {
-  const router = useRouter();
+export default function HomeContent() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<RawGeocodeResult[]>([]);
   const [open, setOpen] = useState(false);
@@ -67,15 +61,10 @@ export default function HomeContent({ hasAccess }: Props) {
   }
 
   function handleSubmit(e: FormEvent) {
+    // Picking an address from the dropdown already sets it; Solkalkulator,
+    // Reisetid and Støynivå below pick it up automatically (see
+    // ToolsSection/toolTabs). Nothing else to do on submit.
     e.preventDefault();
-    if (!sharedAddress) return;
-    // Once an address is set, Solkalkulator and Reisetid below pick it up
-    // automatically (see ToolsSection/toolTabs). Unpaid visitors still get
-    // routed to the paywall, since a set address doesn't unlock anything
-    // without access.
-    if (!hasAccess) {
-      router.push("/pricing");
-    }
   }
 
   return (
@@ -125,12 +114,9 @@ export default function HomeContent({ hasAccess }: Props) {
             Sett
           </button>
         </form>
-        <p className={styles.finePrint}>
-          199 kr · én måned full tilgang, ingen automatisk fornyelse
-        </p>
       </section>
 
-      <ToolsSection hasAccess={hasAccess} sharedAddress={sharedAddress} />
+      <ToolsSection sharedAddress={sharedAddress} />
     </>
   );
 }

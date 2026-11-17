@@ -5,7 +5,7 @@ import { fetchWithRetry } from "@/lib/http";
 // Nominatim. This uses Kartverket's open address API instead - plain fetch,
 // no Node APIs, so it runs fine in the Cloudflare Worker. The response is
 // reshaped into the same { lat, lon }[] (Nominatim-like) contract that
-// app/(paid)/solkalkulator/lib/api.ts already expects, so that file - ported
+// app/(tools)/solkalkulator/lib/api.ts already expects, so that file - ported
 // unchanged - didn't need to change.
 const GEONORGE_URL = "https://ws.geonorge.no/adresser/v1/sok";
 
