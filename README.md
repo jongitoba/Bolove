@@ -31,7 +31,7 @@ All open Norwegian data, plus a couple of open routing/map services:
 
 ## Stack
 
-Next.js 15 (App Router, TypeScript, CSS Modules), MapLibre GL and SunCalc, deployed to
+Next.js 16 (App Router, TypeScript, CSS Modules), MapLibre GL and SunCalc, deployed to
 Cloudflare Workers via [OpenNext](https://opennext.js.org/cloudflare). There's no database.
 The only server code is two stateless API routes (`/api/geocode`, `/api/noise`).
 
