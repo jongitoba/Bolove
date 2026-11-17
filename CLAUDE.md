@@ -8,7 +8,7 @@ links back there).
 
 ## Stack
 
-- **Next.js 15** (App Router, TypeScript, plain CSS Modules — no Tailwind).
+- **Next.js 16** (App Router, TypeScript, plain CSS Modules — no Tailwind).
 - **Deployment: Cloudflare Workers** via `@opennextjs/cloudflare` (OpenNext). Config in
   [`wrangler.toml`](wrangler.toml) and [`open-next.config.ts`](open-next.config.ts).
 - No server-side state. The only server code is two stateless API routes
